@@ -48,6 +48,6 @@ if [ -n "$param" ] && echo "$param" | grep -q "^[a-zA-Z]*$" && [ -n "$2" ]; then
     script "$param" "$2"
 else
     # If $param does not contain only letters, show usage information and exit
-    echo "Usage: dick.sh [file] [target disk]"
+    echo "Usage: dick.sh [target disk] [file]"
     exit 1
 fi
