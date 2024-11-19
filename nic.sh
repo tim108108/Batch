@@ -141,6 +141,6 @@ if [ -n "$target_ip" ] && echo "$target_ip" | grep -q "^[a-zA-Z0-9.]*$" && [ -n 
     script "$target_ip" "$test_file"
 else
     # If $target_ip does not contain only letters, show usage information and exit
-    echo "Usage: net.sh [target ip] [test file]"
+    echo "Usage: nic.sh [target ip] [test file]"
     exit 1
 fi
