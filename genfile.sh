@@ -23,7 +23,7 @@ case "$param" in
 esac
 
 # Generate a sequence of numbers and write them to temp.txt
-seq 0 128 | tr '\n' ' ' > temp.txt
+seq 0 127 | tr '\n' ' ' > temp.txt
 
 # Use cat and repeated appending to approach the desired file size
 while [ $(stat -c%s temp.txt) -lt $size ]; do
