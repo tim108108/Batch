@@ -7,11 +7,17 @@ case "$param" in
     1MB)
         size=1048576  # 1MB = 1024 * 1024 bytes
         ;;
+    2MB)
+        size=2097152  # 2MB = 2 * 1024 * 1024 bytes
+        ;;
+    5MB)
+        size=5242880  # 5MB = 5 * 1024 * 1024 bytes
+        ;;
     10MB)
         size=10485760 # 10MB = 10 * 1024 * 1024 bytes
         ;;
     *)
-        echo "Usage: $0 1MB|10MB"
+        echo "Usage: $0 1MB|2MB|5MB|10MB"
         exit 1
         ;;
 esac
