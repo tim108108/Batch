@@ -10,13 +10,16 @@ test_file=$2
 windows_script() {
     tmp_file=$(echo "$target_path" | tr '[:lower:]' '[:upper:]')_${test_file:0:-6}
     log_file="_Disk_${tmp_file}.log"
-    
+    start_time=$(date +"%Y/%m/%d %T.%3N")
+
     mkdir "Disk_${tmp_file}" -p
     cp $test_file "Disk_${tmp_file}/${tmp_file}_O.txt"
     
     while true;do
         current_time=$(date +"%Y/%m/%d %T.%3N")
-        echo -e "=========================\n=${current_time}=\n========================="
+        echo -e "===================================================="
+        echo -e "=${start_time} -> ${current_time}="
+        echo -e "===================================================="
         cp Disk_${tmp_file}/${tmp_file}_O.txt   ${target_path}:/${tmp_file}_1.tmp
         cp ${target_path}:/${tmp_file}_1.tmp    Disk_${tmp_file}/${tmp_file}_2.tmp
         cp Disk_${tmp_file}/${tmp_file}_2.tmp   ${target_path}:/${tmp_file}_3.tmp
@@ -48,20 +51,24 @@ linux_script() {
     tmp_file=$(echo "$target_path" | tr '[:lower:]' '[:upper:]')"_"$(echo "$test_file" | rev | cut -c7- | rev)
     target_path="/mnt/$(echo "$target_path" | tr '[:upper:]' '[:lower:]')"
     log_file="_Disk_${tmp_file}.log"
-    
+    start_time=$(date +"%Y/%m/%d %T.%3N")
+
     mkdir "Disk_${tmp_file}" -p
     cp $test_file "Disk_${tmp_file}/${tmp_file}_O.txt"
-    
+
     while true;do
         current_time=$(date +"%Y/%m/%d %T.%3N")
-        echo "=========================\n=${current_time}=\n========================="
+        echo "===================================================="
+        echo "=${start_time} -> ${current_time}="
+        echo "===================================================="
         cp Disk_${tmp_file}/${tmp_file}_O.txt   ${target_path}/${tmp_file}_1.tmp
         cp ${target_path}/${tmp_file}_1.tmp     Disk_${tmp_file}/${tmp_file}_2.tmp
         cp Disk_${tmp_file}/${tmp_file}_2.tmp   ${target_path}/${tmp_file}_3.tmp
         cp ${target_path}/${tmp_file}_3.tmp     Disk_${tmp_file}/${tmp_file}_4.tmp
         cp Disk_${tmp_file}/${tmp_file}_4.tmp   ${target_path}/${tmp_file}_5.tmp
         cp ${target_path}/${tmp_file}_5.tmp     Disk_${tmp_file}/${tmp_file}_6.tmp
-        
+        ls ${target_path}
+
         # compare file
         if  diff "Disk_${tmp_file}/${tmp_file}_6.tmp" "Disk_${tmp_file}/${tmp_file}_O.txt" > /dev/null; then
             echo "File No Difference, Continuing..."    >> "Disk_${tmp_file}/${log_file}"
