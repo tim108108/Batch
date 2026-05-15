@@ -15,28 +15,32 @@ windows_script() {
 ip_name=$(echo $target_ip |cut -c1-1)
 tmp_file=$(echo $test_file | rev | cut -c7- | rev)
 log_file=_NIC_${ip_name}_${tmp_file}.log
-start_time=$(date +"%Y/%m/%d %T.%3N")
 
 mkdir NIC_${ip_name}_${tmp_file} -p
 cp $test_file NIC_${ip_name}_${tmp_file}/${tmp_file}_O.txt
 
 while true;do
 current_time=$(date +"%Y/%m/%d %T.%3N")
-echo "===================================================="
-echo "=${start_time} -> ${current_time}="
-echo "===================================================="
+echo -e "=========================\n=${current_time}=\n========================="
 
 ftp -inv $target_ip<<EOF 
 user $ftp_account $ftp_password
 binary
 quote PASV
-put NIC_${ip_name}_${tmp_file}/${tmp_file}_O.txt ${tmp_file}_1.tmp
-get ${tmp_file}_1.tmp NIC_${ip_name}_${tmp_file}/${tmp_file}_2.tmp
-put NIC_${ip_name}_${tmp_file}/${tmp_file}_2.tmp ${tmp_file}_3.tmp
-get ${tmp_file}_3.tmp NIC_${ip_name}_${tmp_file}/${tmp_file}_4.tmp
-put NIC_${ip_name}_${tmp_file}/${tmp_file}_4.tmp ${tmp_file}_5.tmp
-get ${tmp_file}_5.tmp NIC_${ip_name}_${tmp_file}/${tmp_file}_6.tmp
-ls
+mkdir NIC_${ip_name}_${tmp_file}
+put NIC_${ip_name}_${tmp_file}/${tmp_file}_O.txt \
+    NIC_${ip_name}_${tmp_file}/${tmp_file}_1.tmp
+get NIC_${ip_name}_${tmp_file}/${tmp_file}_1.tmp \
+    NIC_${ip_name}_${tmp_file}/${tmp_file}_2.tmp
+put NIC_${ip_name}_${tmp_file}/${tmp_file}_2.tmp \
+    NIC_${ip_name}_${tmp_file}/${tmp_file}_3.tmp
+get NIC_${ip_name}_${tmp_file}/${tmp_file}_3.tmp \
+    NIC_${ip_name}_${tmp_file}/${tmp_file}_4.tmp
+put NIC_${ip_name}_${tmp_file}/${tmp_file}_4.tmp \
+    NIC_${ip_name}_${tmp_file}/${tmp_file}_5.tmp
+get NIC_${ip_name}_${tmp_file}/${tmp_file}_5.tmp \
+    NIC_${ip_name}_${tmp_file}/${tmp_file}_6.tmp
+ls NIC_${ip_name}_${tmp_file}
 bye
 EOF
 
@@ -49,6 +53,7 @@ echo "================================="    >> "NIC_${ip_name}_${tmp_file}/${log
 rm NIC_${ip_name}_${tmp_file}/*.tmp
 ftp -inv $target_ip <<EOF >>/dev/null
 user $ftp_account $ftp_password
+cd NIC_${ip_name}_${tmp_file}
 mdelete *.tmp
 bye
 EOF
@@ -70,27 +75,32 @@ linux_script() {
 ip_name=$(echo $target_ip |cut -c1-1)
 tmp_file=$(echo $test_file | rev | cut -c7- | rev)
 log_file=_NIC_${ip_name}_${tmp_file}.log
-start_time=$(date +"%Y/%m/%d %T.%3N")
 
 mkdir NIC_${ip_name}_${tmp_file} -p
 cp $test_file NIC_${ip_name}_${tmp_file}/${tmp_file}_O.txt
 
 while true;do
 current_time=$(date +"%Y/%m/%d %T.%3N")
-echo "===================================================="
-echo "=${start_time} -> ${current_time}="
-echo "===================================================="
+echo "=========================\n=${current_time}=\n========================="
 
 ftp -in $target_ip<<EOF | awk '/^[d-]/ || /257/ {print $0}'
 user $ftp_account $ftp_password
 binary
-put NIC_${ip_name}_${tmp_file}/${tmp_file}_O.txt ${tmp_file}_1.tmp
-get ${tmp_file}_1.tmp NIC_${ip_name}_${tmp_file}/${tmp_file}_2.tmp
-put NIC_${ip_name}_${tmp_file}/${tmp_file}_2.tmp ${tmp_file}_3.tmp
-get ${tmp_file}_3.tmp NIC_${ip_name}_${tmp_file}/${tmp_file}_4.tmp
-put NIC_${ip_name}_${tmp_file}/${tmp_file}_4.tmp ${tmp_file}_5.tmp
-get ${tmp_file}_5.tmp NIC_${ip_name}_${tmp_file}/${tmp_file}_6.tmp
-ls
+quote PASV
+mkdir NIC_${ip_name}_${tmp_file}
+put NIC_${ip_name}_${tmp_file}/${tmp_file}_O.txt \
+    NIC_${ip_name}_${tmp_file}/${tmp_file}_1.tmp
+get NIC_${ip_name}_${tmp_file}/${tmp_file}_1.tmp \
+    NIC_${ip_name}_${tmp_file}/${tmp_file}_2.tmp
+put NIC_${ip_name}_${tmp_file}/${tmp_file}_2.tmp \
+    NIC_${ip_name}_${tmp_file}/${tmp_file}_3.tmp
+get NIC_${ip_name}_${tmp_file}/${tmp_file}_3.tmp \
+    NIC_${ip_name}_${tmp_file}/${tmp_file}_4.tmp
+put NIC_${ip_name}_${tmp_file}/${tmp_file}_4.tmp \
+    NIC_${ip_name}_${tmp_file}/${tmp_file}_5.tmp
+get NIC_${ip_name}_${tmp_file}/${tmp_file}_5.tmp \
+    NIC_${ip_name}_${tmp_file}/${tmp_file}_6.tmp
+ls NIC_${ip_name}_${tmp_file}
 bye
 EOF
 
@@ -103,6 +113,7 @@ echo "================================="    >> "NIC_${ip_name}_${tmp_file}/${log
 rm NIC_${ip_name}_${tmp_file}/*.tmp
 ftp -inv $target_ip <<EOF >>/dev/null
 user $ftp_account $ftp_password
+cd NIC_${ip_name}_${tmp_file}
 mdelete *.tmp
 bye
 EOF
